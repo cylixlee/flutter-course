@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_course/pages/home_page.dart';
-import 'package:flutter_course/widgets/navigation_bar_app.dart';
+import 'package:flutter_course/widgets/global_app_navigator.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -23,21 +23,23 @@ void main() async {
   }
 
   final destinations = [
-    const NavigationBarAppDestination(
+    const GlobalAppNavigatorDestination(
       label: 'Home',
       icon: Icons.home,
-      child: HomePage(),
+      body: HomePage(),
     ),
-    const NavigationBarAppDestination(
+    const GlobalAppNavigatorDestination(
       label: 'Profile',
       icon: Icons.person,
-      child: Center(child: Text('Profile')),
+      body: Center(child: Text('Profile')),
     ),
   ];
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => NavigationBarAppModel(destinations: destinations),
+      create: (context) {
+        return GlobalAppNavigatorModel(destinations: destinations);
+      },
       child: const MyApp(),
     ),
   );
@@ -48,6 +50,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: NavigationBarApp());
+    return const MaterialApp(
+      home: GlobalAppNavigator(
+        labelVisibility: GlobalAppNavigatorLabelVisibility.showSelected,
+      ),
+    );
   }
 }
