@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// The official example rewritten with `provider` package.
 void main() {
   runApp(
     ChangeNotifierProvider(
