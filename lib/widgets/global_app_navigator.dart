@@ -67,6 +67,7 @@ class GlobalAppNavigator extends StatelessWidget {
                   model.selectedIndex = value;
                 },
                 labelType: labelType,
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
               ),
               Expanded(child: value.destinations[value.selectedIndex].body),
             ],
