@@ -10,11 +10,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.from(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
       home: Scaffold(
-        appBar: AppBar(title: const Text("Flutter Basic Layout")),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -30,6 +26,10 @@ class MainApp extends StatelessWidget {
             ],
           ),
         ),
+        appBar: AppBar(title: const Text("Flutter Basic Layout")),
+      ),
+      theme: ThemeData.from(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
     );
   }
