@@ -21,37 +21,50 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _useDarkMode = false;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: Text("Flutter Material App")),
-        drawer: Drawer(
+        appBar: AppBar(title: Text("Flutter StatefulWidget")),
+        body: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              DrawerHeader(child: Text("Drawer Header")),
-              ListTile(title: Text("Logout")),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Currently using "),
+                  Text(
+                    _useDarkMode ? "dark" : "light",
+                    textScaler: TextScaler.linear(1.25),
+                  ),
+                  Text(" mode"),
+                ],
+              ),
+              SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _useDarkMode = !_useDarkMode;
+                  });
+                },
+                child: Text("Toggle Theme"),
+              ),
             ],
           ),
         ),
-        bottomNavigationBar: NavigationBar(
-          destinations: [
-            NavigationDestination(icon: Icon(Icons.home), label: "Home"),
-            NavigationDestination(icon: Icon(Icons.person), label: "Profile"),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {},
-        ),
       ),
-      theme: ThemeData.from(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-      ),
-      debugShowCheckedModeBanner: false,
+      theme: _useDarkMode ? ThemeData.dark() : ThemeData.light(),
     );
   }
 }
