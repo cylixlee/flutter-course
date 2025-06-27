@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_course/pages/home_page.dart';
+import 'package:flutter_course/widgets/navigation_bar_app.dart';
+import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -12,13 +15,32 @@ void main() async {
     await windowManager.ensureInitialized();
 
     // Apply window options.
-    final windowOptions = WindowOptions(
+    const windowOptions = WindowOptions(
       title: "Flutter Course",
       size: Size(500, 900),
     );
     windowManager.waitUntilReadyToShow(windowOptions);
   }
-  runApp(const MyApp());
+
+  final destinations = [
+    const NavigationBarAppDestination(
+      label: 'Home',
+      icon: Icons.home,
+      child: HomePage(),
+    ),
+    const NavigationBarAppDestination(
+      label: 'Profile',
+      icon: Icons.person,
+      child: Center(child: Text('Profile')),
+    ),
+  ];
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => NavigationBarAppModel(destinations: destinations),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -26,32 +48,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text("Flutter Material App")),
-        drawer: Drawer(
-          child: Column(
-            children: [
-              DrawerHeader(child: Text("Drawer Header")),
-              ListTile(title: Text("Logout")),
-            ],
-          ),
-        ),
-        bottomNavigationBar: NavigationBar(
-          destinations: [
-            NavigationDestination(icon: Icon(Icons.home), label: "Home"),
-            NavigationDestination(icon: Icon(Icons.person), label: "Profile"),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {},
-        ),
-      ),
-      theme: ThemeData.from(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-      ),
-      debugShowCheckedModeBanner: false,
-    );
+    return const MaterialApp(home: NavigationBarApp());
   }
 }
