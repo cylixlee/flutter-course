@@ -33,10 +33,19 @@ class MainApp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text('You have pushed the button this many times:'),
-              Consumer<MainAppModel>(
-                builder: (context, value, _) {
+              // Consumer<MainAppModel>(
+              //   builder: (context, value, child) {
+              //     return Text(
+              //       '${value.counter}',
+              //       style: Theme.of(context).textTheme.headlineMedium,
+              //     );
+              //   },
+              // ),
+              Selector<MainAppModel, int>(
+                selector: (context, value) => value.counter,
+                builder: (context, value, child) {
                   return Text(
-                    '${value.counter}',
+                    '$value',
                     style: Theme.of(context).textTheme.headlineMedium,
                   );
                 },
