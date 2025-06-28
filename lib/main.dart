@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_course/pages/home_page.dart';
+import 'package:flutter_course/pages/profile_page.dart';
 import 'package:flutter_course/widgets/global_app_navigator.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
@@ -22,16 +23,16 @@ void main() async {
     windowManager.waitUntilReadyToShow(windowOptions);
   }
 
-  final destinations = [
-    const GlobalAppNavigatorDestination(
+  const destinations = [
+    GlobalAppNavigatorDestination(
       label: 'Home',
       icon: Icons.home,
       body: HomePage(),
     ),
-    const GlobalAppNavigatorDestination(
+    GlobalAppNavigatorDestination(
       label: 'Profile',
       icon: Icons.person,
-      body: Center(child: Text('Profile')),
+      body: ProfilePage(),
     ),
   ];
 
