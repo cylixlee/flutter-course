@@ -24,6 +24,7 @@ class GlobalAppNavigatorModel with ChangeNotifier {
   int get selectedIndex => _selectedIndex;
   PageController get pageController => _pageController;
 
+  late final List<Widget> _children;
   PageController _pageController = PageController();
   int _selectedIndex = 0;
   _NavigatorType? _type;
@@ -32,7 +33,9 @@ class GlobalAppNavigatorModel with ChangeNotifier {
     required this.destinations,
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeInOut,
-  });
+  }) {
+    _children = destinations.map((e) => e.body).toList();
+  }
 
   set selectedIndex(int value) {
     _selectedIndex = value;
@@ -60,9 +63,7 @@ class GlobalAppNavigator extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       scrollDirection: scrollDirection,
       controller: value.pageController,
-      children: List.generate(value.destinations.length, (index) {
-        return value.destinations[index].body;
-      }),
+      children: value._children,
     );
   }
 
