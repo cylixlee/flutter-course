@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_course/pages/home_page.dart';
 import 'package:flutter_course/pages/profile_page.dart';
 import 'package:flutter_course/widgets/global_app_navigator.dart';
+import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -22,7 +23,12 @@ void main() async {
     windowManager.waitUntilReadyToShow(windowOptions);
   }
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => HomePageModel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
