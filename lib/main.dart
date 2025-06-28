@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_course/pages/home_page.dart';
 import 'package:flutter_course/pages/profile_page.dart';
 import 'package:flutter_course/widgets/global_app_navigator.dart';
-import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -23,27 +22,7 @@ void main() async {
     windowManager.waitUntilReadyToShow(windowOptions);
   }
 
-  const destinations = [
-    GlobalAppNavigatorDestination(
-      label: 'Home',
-      icon: Icons.home,
-      body: HomePage(),
-    ),
-    GlobalAppNavigatorDestination(
-      label: 'Profile',
-      icon: Icons.person,
-      body: ProfilePage(),
-    ),
-  ];
-
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) {
-        return GlobalAppNavigatorModel(destinations: destinations);
-      },
-      child: const MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -51,9 +30,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: GlobalAppNavigator(
-        labelVisibility: GlobalAppNavigatorLabelVisibility.showSelected,
+        destinations: const [
+          GlobalAppNavigatorDestination(
+            label: 'Home',
+            icon: Icons.home,
+            body: HomePage(),
+          ),
+          GlobalAppNavigatorDestination(
+            label: 'Profile',
+            icon: Icons.person,
+            body: ProfilePage(),
+          ),
+        ],
       ),
     );
   }
