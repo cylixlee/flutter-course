@@ -66,7 +66,7 @@ class GlobalAppNavigator extends StatelessWidget {
     );
   }
 
-  Widget _buildNavigationRail(BuildContext context, _NavigatorType type) {
+  Widget _buildNavigationRail(BuildContext context) {
     final labelType = switch (labelVisibility) {
       GlobalAppNavigatorLabelVisibility.hidden => NavigationRailLabelType.none,
       GlobalAppNavigatorLabelVisibility.show => NavigationRailLabelType.all,
@@ -75,8 +75,8 @@ class GlobalAppNavigator extends StatelessWidget {
     };
     final model = Provider.of<GlobalAppNavigatorModel>(context, listen: false);
 
-    if (model._type != type) {
-      model._type = type;
+    if (model._type != _NavigatorType.rail) {
+      model._type = _NavigatorType.rail;
       model._pageController = PageController(initialPage: model.selectedIndex);
     }
 
@@ -105,7 +105,7 @@ class GlobalAppNavigator extends StatelessWidget {
     );
   }
 
-  Widget _buildNavigationBar(BuildContext context, _NavigatorType type) {
+  Widget _buildNavigationBar(BuildContext context) {
     final labelBehavior = switch (labelVisibility) {
       GlobalAppNavigatorLabelVisibility.hidden =>
         NavigationDestinationLabelBehavior.alwaysHide,
@@ -116,8 +116,8 @@ class GlobalAppNavigator extends StatelessWidget {
     };
     final model = Provider.of<GlobalAppNavigatorModel>(context, listen: false);
 
-    if (model._type != type) {
-      model._type = type;
+    if (model._type != _NavigatorType.bar) {
+      model._type = _NavigatorType.bar;
       model._pageController = PageController(initialPage: model.selectedIndex);
     }
 
@@ -146,9 +146,9 @@ class GlobalAppNavigator extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     if (mediaQuery.size.width >= 600) {
-      return _buildNavigationRail(context, _NavigatorType.rail);
+      return _buildNavigationRail(context);
     } else {
-      return _buildNavigationBar(context, _NavigatorType.bar);
+      return _buildNavigationBar(context);
     }
   }
 }
