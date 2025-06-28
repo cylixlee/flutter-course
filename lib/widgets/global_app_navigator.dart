@@ -14,17 +14,30 @@ class GlobalAppNavigatorDestination {
   });
 }
 
+enum _NavigatorType { rail, bar }
+
 class GlobalAppNavigatorModel with ChangeNotifier {
   final List<GlobalAppNavigatorDestination> destinations;
-  int _selectedIndex = 0;
-
-  GlobalAppNavigatorModel({required this.destinations});
+  final Duration duration;
+  final Curve curve;
 
   int get selectedIndex => _selectedIndex;
+  PageController get pageController => _pageController;
+
+  PageController _pageController = PageController();
+  int _selectedIndex = 0;
+  _NavigatorType? _type;
+
+  GlobalAppNavigatorModel({
+    required this.destinations,
+    this.duration = const Duration(milliseconds: 300),
+    this.curve = Curves.easeInOut,
+  });
 
   set selectedIndex(int value) {
     _selectedIndex = value;
     notifyListeners();
+    pageController.animateToPage(value, duration: duration, curve: curve);
   }
 }
 
@@ -38,13 +51,34 @@ class GlobalAppNavigator extends StatelessWidget {
     this.labelVisibility = GlobalAppNavigatorLabelVisibility.showSelected,
   });
 
-  Widget _buildNavigationRail(BuildContext context) {
+  Widget _buildPageView(
+    BuildContext context,
+    GlobalAppNavigatorModel value,
+    Axis scrollDirection,
+  ) {
+    return PageView(
+      physics: const NeverScrollableScrollPhysics(),
+      scrollDirection: scrollDirection,
+      controller: value.pageController,
+      children: List.generate(value.destinations.length, (index) {
+        return value.destinations[index].body;
+      }),
+    );
+  }
+
+  Widget _buildNavigationRail(BuildContext context, _NavigatorType type) {
     final labelType = switch (labelVisibility) {
       GlobalAppNavigatorLabelVisibility.hidden => NavigationRailLabelType.none,
       GlobalAppNavigatorLabelVisibility.show => NavigationRailLabelType.all,
       GlobalAppNavigatorLabelVisibility.showSelected =>
         NavigationRailLabelType.selected,
     };
+    final model = Provider.of<GlobalAppNavigatorModel>(context, listen: false);
+
+    if (model._type != type) {
+      model._type = type;
+      model._pageController = PageController(initialPage: model.selectedIndex);
+    }
 
     return Consumer<GlobalAppNavigatorModel>(
       builder: (context, value, child) {
@@ -59,17 +93,11 @@ class GlobalAppNavigator extends StatelessWidget {
                   );
                 }),
                 selectedIndex: value.selectedIndex,
-                onDestinationSelected: (value) {
-                  final model = Provider.of<GlobalAppNavigatorModel>(
-                    context,
-                    listen: false,
-                  );
-                  model.selectedIndex = value;
-                },
+                onDestinationSelected: (value) => model.selectedIndex = value,
                 labelType: labelType,
                 backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
               ),
-              Expanded(child: value.destinations[value.selectedIndex].body),
+              Expanded(child: _buildPageView(context, value, Axis.vertical)),
             ],
           ),
         );
@@ -77,7 +105,7 @@ class GlobalAppNavigator extends StatelessWidget {
     );
   }
 
-  Widget _buildNavigationBar(BuildContext context) {
+  Widget _buildNavigationBar(BuildContext context, _NavigatorType type) {
     final labelBehavior = switch (labelVisibility) {
       GlobalAppNavigatorLabelVisibility.hidden =>
         NavigationDestinationLabelBehavior.alwaysHide,
@@ -86,11 +114,17 @@ class GlobalAppNavigator extends StatelessWidget {
       GlobalAppNavigatorLabelVisibility.showSelected =>
         NavigationDestinationLabelBehavior.onlyShowSelected,
     };
+    final model = Provider.of<GlobalAppNavigatorModel>(context, listen: false);
+
+    if (model._type != type) {
+      model._type = type;
+      model._pageController = PageController(initialPage: model.selectedIndex);
+    }
 
     return Consumer<GlobalAppNavigatorModel>(
       builder: (context, value, child) {
         return Scaffold(
-          body: value.destinations[value.selectedIndex].body,
+          body: _buildPageView(context, value, Axis.horizontal),
           bottomNavigationBar: NavigationBar(
             destinations: List.generate(value.destinations.length, (index) {
               return NavigationDestination(
@@ -100,13 +134,7 @@ class GlobalAppNavigator extends StatelessWidget {
               );
             }),
             selectedIndex: value.selectedIndex,
-            onDestinationSelected: (value) {
-              final model = Provider.of<GlobalAppNavigatorModel>(
-                context,
-                listen: false,
-              );
-              model.selectedIndex = value;
-            },
+            onDestinationSelected: (value) => model.selectedIndex = value,
             labelBehavior: labelBehavior,
           ),
         );
@@ -118,9 +146,9 @@ class GlobalAppNavigator extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     if (mediaQuery.size.width >= 600) {
-      return _buildNavigationRail(context);
+      return _buildNavigationRail(context, _NavigatorType.rail);
     } else {
-      return _buildNavigationBar(context);
+      return _buildNavigationBar(context, _NavigatorType.bar);
     }
   }
 }
