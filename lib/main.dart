@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_course/pages/home_page.dart';
-import 'package:flutter_course/pages/profile_page.dart';
+import 'package:flutter_course/pages/controls_page.dart';
 import 'package:flutter_course/widgets/global_app_navigator.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
@@ -36,9 +36,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: GlobalAppNavigator(
-        destinations: const [
+        destinations: [
           GlobalAppNavigatorDestination(
             label: 'Home',
             icon: Icons.home,
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
           GlobalAppNavigatorDestination(
             label: 'Profile',
             icon: Icons.person,
-            body: ProfilePage(),
+            body: ControlsPage(),
           ),
         ],
       ),

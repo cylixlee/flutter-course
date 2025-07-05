@@ -23,15 +23,13 @@ class GlobalAppNavigator extends StatefulWidget {
   final Curve curve;
   final GlobalAppNavigatorLabelVisibility labelVisibility;
 
-  late final List<Widget> _children;
-
-  GlobalAppNavigator({
+  const GlobalAppNavigator({
     super.key,
     required this.destinations,
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeInOut,
     this.labelVisibility = GlobalAppNavigatorLabelVisibility.showSelected,
-  }) : _children = destinations.map((e) => e.body).toList();
+  });
 
   @override
   State<GlobalAppNavigator> createState() => _GlobalAppNavigatorState();
@@ -58,7 +56,10 @@ class _GlobalAppNavigatorState extends State<GlobalAppNavigator> {
       physics: const NeverScrollableScrollPhysics(),
       scrollDirection: scrollDirection,
       controller: _pageController,
-      children: widget._children,
+      children: List.generate(
+        widget.destinations.length,
+        (index) => widget.destinations[index].body,
+      ),
     );
   }
 
